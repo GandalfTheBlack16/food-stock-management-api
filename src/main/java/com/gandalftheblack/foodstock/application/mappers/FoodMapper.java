@@ -7,7 +7,6 @@ import com.gandalftheblack.foodstock.domain.entities.valueobjects.FoodQuantity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,17 +19,28 @@ public interface FoodMapper {
 
     Food dtoToFood(FoodDto foodDto);
 
-    static String foodIdMap (UUID id) {
+    static String foodIdMap(UUID id) {
         return id.toString();
+    }
+
+    static UUID foodStringToIdMap(String value) {
+        return UUID.fromString(value);
     }
 
     static String foodNameMap(FoodName value) {
         return value.getName();
     }
 
+    static FoodName foodStringToNameMap(String value) {
+        return new FoodName(value);
+    }
+
     static Integer foodQuantityMap(FoodQuantity value) {
         return value.getQuantity();
     }
 
-    static Date foodDateMap(Date value) { return value; }
+    static FoodQuantity foodIntegerToQuantityMap(Integer value) {
+        return new FoodQuantity(value);
+    }
+
 }
