@@ -4,43 +4,45 @@ import com.gandalftheblack.foodstock.application.dtos.FoodDto;
 import com.gandalftheblack.foodstock.domain.entities.Food;
 import com.gandalftheblack.foodstock.domain.entities.valueobjects.FoodName;
 import com.gandalftheblack.foodstock.domain.entities.valueobjects.FoodQuantity;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface FoodMapper {
+@Component
+public class FoodMapper {
 
-    List<FoodDto> foodListToDto(List<Food> foodList);
+    public List<FoodDto> foodListToDto(List<Food> foodList) {
+        if ( foodList == null ) {
+            return null;
+        }
 
-    FoodDto foodToDto(Food food);
+        List<FoodDto> list = new ArrayList<>( foodList.size() );
+        for ( Food food : foodList ) {
+            list.add( foodToDto( food ) );
+        }
 
-    Food dtoToFood(FoodDto foodDto);
-
-    static String foodIdMap(UUID id) {
-        return id.toString();
+        return list;
     }
 
-    static UUID foodStringToIdMap(String value) {
-        return UUID.fromString(value);
+    public FoodDto foodToDto(Food food) {
+        return new FoodDto(
+                food.getId().toString(),
+                food.getName().getName(),
+                food.getQuantity().getQuantity(),
+                food.getCreatedAt(),
+                food.getModifiedAt()
+        );
     }
 
-    static String foodNameMap(FoodName value) {
-        return value.getName();
+    public Food dtoToFood(FoodDto foodDto) {
+        return new Food(
+                UUID.fromString(foodDto.getId()),
+                new FoodName(foodDto.getName()),
+                new FoodQuantity(foodDto.getQuantity()),
+                foodDto.getCreatedAt(),
+                foodDto.getModifiedAt()
+        );
     }
-
-    static FoodName foodStringToNameMap(String value) {
-        return new FoodName(value);
-    }
-
-    static Integer foodQuantityMap(FoodQuantity value) {
-        return value.getQuantity();
-    }
-
-    static FoodQuantity foodIntegerToQuantityMap(Integer value) {
-        return new FoodQuantity(value);
-    }
-
 }

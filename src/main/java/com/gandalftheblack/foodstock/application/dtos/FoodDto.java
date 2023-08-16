@@ -14,4 +14,5 @@ public class FoodDto {
     private Integer quantity;
     private Date createdAt;
     private Date modifiedAt;
+
 }
