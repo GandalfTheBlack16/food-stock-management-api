@@ -1,4 +1,4 @@
-package com.gandalftheblack.foodstock.infrastructure.repositories;
+package com.gandalftheblack.foodstock.infrastructure.repositories.jdbc;
 
 import com.gandalftheblack.foodstock.domain.entities.Food;
 import com.gandalftheblack.foodstock.domain.entities.valueobjects.FoodName;
@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class JdbcFoodRepositoryImpl implements FoodRepository {
 
     @Override
     public List<Food> getFoodList() {
-        return jdbcTemplate.query("SELECT * FROM FOOD", rs -> {
+        return jdbcTemplate.query(SqlConstants.GET_FOOD_LIST_QUERY, rs -> {
             List<Food> mapRet = new ArrayList<>();
             while (rs.next()) {
                 mapRet.add(new Food(
@@ -40,7 +41,7 @@ public class JdbcFoodRepositoryImpl implements FoodRepository {
 
     @Override
     public Food addFood(Food food) {
-        int rowsAffected = jdbcTemplate.update("INSERT INTO FOOD(ID, NAME, QUANTITY, CREATED_AT, MODIFIED_AT) VALUES (?,?,?,?,?)",
+        int rowsAffected = jdbcTemplate.update(SqlConstants.ADD_FOOD_QUERY,
                 food.getId(),
                 food.getName().getValue(),
                 food.getQuantity().getValue(),
@@ -55,11 +56,45 @@ public class JdbcFoodRepositoryImpl implements FoodRepository {
 
     @Override
     public Food editFoodById(UUID foodId, Food food) {
-        return null;
+        Date modified = new Date();
+        int rowsAffected = jdbcTemplate.update(SqlConstants.EDIT_FOOD_QUERY,
+                food.getName().getValue(),
+                food.getQuantity().getValue(),
+                modified,
+                foodId
+        );
+        if (rowsAffected == 0) {
+            throw new RuntimeException("Cannot perform update");
+        }
+        food.setModifiedAt(modified);
+        return food;
     }
 
     @Override
     public Food removeFoodById(UUID foodId) {
-        return null;
+        List<Food> results = jdbcTemplate.query(SqlConstants.FIND_FOOD_BY_ID, new Object[] { foodId }, rs -> {
+            List<Food> mapRet = new ArrayList<>();
+            while (rs.next()) {
+                mapRet.add(new Food(
+                                UUID.fromString(rs.getString("id")),
+                                new FoodName(rs.getString("name")),
+                                new FoodQuantity(rs.getInt("quantity")),
+                                rs.getDate("created_at"),
+                                rs.getDate("modified_at")
+                        )
+                );
+            }
+            return mapRet;
+        });
+
+        assert results != null;
+        if (results.isEmpty()) {
+            return null;
+        }
+        int rowsAffected = jdbcTemplate.update(SqlConstants.DELETE_FOOD_QUERY, foodId);
+        if (rowsAffected == 0) {
+            throw new RuntimeException("Cannot perform update");
+        }
+        return results.get(0);
     }
 }
