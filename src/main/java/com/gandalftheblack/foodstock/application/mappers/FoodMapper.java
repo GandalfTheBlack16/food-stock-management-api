@@ -2,8 +2,6 @@ package com.gandalftheblack.foodstock.application.mappers;
 
 import com.gandalftheblack.foodstock.application.dtos.FoodDto;
 import com.gandalftheblack.foodstock.domain.entities.Food;
-import com.gandalftheblack.foodstock.domain.entities.valueobjects.FoodName;
-import com.gandalftheblack.foodstock.domain.entities.valueobjects.FoodQuantity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -37,12 +35,16 @@ public class FoodMapper {
     }
 
     public Food dtoToFood(FoodDto foodDto) {
-        return new Food(
-                UUID.fromString(foodDto.getId()),
-                new FoodName(foodDto.getName()),
-                new FoodQuantity(foodDto.getQuantity()),
-                foodDto.getCreatedAt(),
-                foodDto.getModifiedAt()
-        );
+        Food mapped = new Food(foodDto.getName(), foodDto.getQuantity());
+        if (foodDto.getId() != null) {
+            mapped.setId(UUID.fromString(foodDto.getId()));
+        }
+        if (foodDto.getCreatedAt() != null){
+            mapped.setCreatedAt(foodDto.getCreatedAt());
+        }
+        if (foodDto.getModifiedAt() != null){
+            mapped.setModifiedAt(foodDto.getModifiedAt());
+        }
+        return mapped;
     }
 }
