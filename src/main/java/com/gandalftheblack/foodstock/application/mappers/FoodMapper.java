@@ -29,8 +29,8 @@ public class FoodMapper {
     public FoodDto foodToDto(Food food) {
         return new FoodDto(
                 food.getId().toString(),
-                food.getName().getName(),
-                food.getQuantity().getQuantity(),
+                food.getName().getValue(),
+                food.getQuantity().getValue(),
                 food.getCreatedAt(),
                 food.getModifiedAt()
         );

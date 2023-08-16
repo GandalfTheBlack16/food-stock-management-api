@@ -36,8 +36,8 @@ public class MockFoodRepositoryImpl implements FoodRepository {
                 .orElse(null);
         if (foundFood != null) {
             int index = foodList.indexOf(foundFood);
-            foundFood.setName(new FoodName(food.getName().getName()));
-            foundFood.setQuantity(new FoodQuantity(food.getQuantity().getQuantity()));
+            foundFood.setName(new FoodName(food.getName().getValue()));
+            foundFood.setQuantity(new FoodQuantity(food.getQuantity().getValue()));
             foodList.set(index, foundFood);
         }
         return foundFood;

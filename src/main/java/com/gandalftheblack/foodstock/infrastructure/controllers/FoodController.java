@@ -27,7 +27,7 @@ public class FoodController {
         try {
             return new ResponseEntity<>(service.getFoodList(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponseEntity(500, e.getMessage()),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -38,7 +38,7 @@ public class FoodController {
         }catch (InvalidFoodNameException | InvalidFoodQuantityException e){
             return new ResponseEntity<>(new ErrorResponseEntity(400, e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponseEntity(500, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,7 +53,7 @@ public class FoodController {
         } catch (InvalidFoodNameException | InvalidFoodQuantityException e) {
             return new ResponseEntity<>(new ErrorResponseEntity(400, e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponseEntity(500, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -66,7 +66,7 @@ public class FoodController {
             }
             return new ResponseEntity<>(body, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ErrorResponseEntity(500, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

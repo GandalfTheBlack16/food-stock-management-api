@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 public class FoodQuantity {
-    private Integer quantity;
+    private Integer value;
 
-    public FoodQuantity(Integer quantity) {
-        if(quantity < 1) {
+    public FoodQuantity(Integer value) {
+        if(value < 1) {
             throw new InvalidFoodQuantityException("Food quantity must be 1 at least");
         }
-        this.quantity = quantity;
+        this.value = value;
     }
 }

@@ -20,20 +20,19 @@ public class JdbcFoodRepositoryImpl implements FoodRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-
     @Override
     public List<Food> getFoodList() {
         return jdbcTemplate.query("SELECT * FROM FOOD", rs -> {
-            List<Food> mapRet= new ArrayList<>();
-            while(rs.next()){
-               mapRet.add(new Food(
-                       UUID.fromString(rs.getString("id")),
-                       new FoodName(rs.getString("name")),
-                       new FoodQuantity(rs.getInt("quantity")),
-                       rs.getDate("created_at"),
-                       rs.getDate("modified_at")
-                       )
-               );
+            List<Food> mapRet = new ArrayList<>();
+            while (rs.next()) {
+                mapRet.add(new Food(
+                                UUID.fromString(rs.getString("id")),
+                                new FoodName(rs.getString("name")),
+                                new FoodQuantity(rs.getInt("quantity")),
+                                rs.getDate("created_at"),
+                                rs.getDate("modified_at")
+                        )
+                );
             }
             return mapRet;
         });
@@ -41,7 +40,17 @@ public class JdbcFoodRepositoryImpl implements FoodRepository {
 
     @Override
     public Food addFood(Food food) {
-        return null;
+        int rowsAffected = jdbcTemplate.update("INSERT INTO FOOD(ID, NAME, QUANTITY, CREATED_AT, MODIFIED_AT) VALUES (?,?,?,?,?)",
+                food.getId(),
+                food.getName().getValue(),
+                food.getQuantity().getValue(),
+                food.getCreatedAt(),
+                food.getModifiedAt()
+        );
+        if (rowsAffected == 0) {
+            throw new RuntimeException("Cannot perform insert");
+        }
+        return food;
     }
 
     @Override

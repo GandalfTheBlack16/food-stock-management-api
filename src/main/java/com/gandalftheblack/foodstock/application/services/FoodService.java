@@ -2,6 +2,7 @@ package com.gandalftheblack.foodstock.application.services;
 
 import com.gandalftheblack.foodstock.application.dtos.FoodDto;
 import com.gandalftheblack.foodstock.application.mappers.FoodMapper;
+import com.gandalftheblack.foodstock.domain.entities.Food;
 import com.gandalftheblack.foodstock.domain.repositories.FoodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class FoodService {
     }
 
     public FoodDto createFood(FoodDto foodDto) {
-        return mapper.foodToDto(repository.addFood(mapper.dtoToFood(foodDto)));
+        return mapper.foodToDto(repository.addFood(new Food(foodDto.getName(), foodDto.getQuantity())));
     }
 
     public FoodDto editFood(String id, FoodDto foodDto) {

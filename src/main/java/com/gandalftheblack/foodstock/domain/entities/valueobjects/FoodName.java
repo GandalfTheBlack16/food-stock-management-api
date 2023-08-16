@@ -5,15 +5,15 @@ import lombok.Data;
 
 @Data
 public class FoodName {
-    private String name;
+    private String value;
 
-    public FoodName(String name) throws InvalidFoodNameException {
-        if (name.isBlank()){
+    public FoodName(String value) throws InvalidFoodNameException {
+        if (value.isBlank()){
             throw new InvalidFoodNameException("Food name must be defined");
         }
-        if (name.length() < 3 || name.length() > 48) {
+        if (value.length() < 3 || value.length() > 48) {
             throw new InvalidFoodNameException("Food name must have between 3 and 48 characters");
         }
-        this.name = name;
+        this.value = value;
     }
 }
